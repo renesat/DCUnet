@@ -1,0 +1,21 @@
+name: vkinternship
+channels:
+  - defaults
+  - pytorch
+dependencies:
+  - ipykernel
+  - ipython
+  - jupyter
+  - matplotlib
+  - numpy
+  - pandas
+  - pep8
+  - pip
+  - python=3.7.3
+  - requests
+  - seaborn
+  - statsmodels
+  - pytorch
+  - torchvision
+  - cpuonly
+  - toml
