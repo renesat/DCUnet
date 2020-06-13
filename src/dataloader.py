@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 
-import requests
-from .utils import load_cofig
 import argparse
-import shutil
 import os
+import shutil
 from enum import Enum
+
+import requests
+
+from .utils import load_cofig
 
 
 class DataTypes(Enum):
@@ -28,7 +30,7 @@ class DataWorker():
                 elif os.path.isdir(file_path):
                     shutil.rmtree(file_path)
             except Exception as e:
-                print('Failed to delete %s. Reason: %s' % (file_path, e))
+                print('Failed to delete {}. Reason: {}'.format(file_path, e))
 
     def download(self):
         return {
@@ -37,12 +39,10 @@ class DataWorker():
 
     def __download_http(self):
         os.makedirs(self.path, exist_ok=True)
-        local_filename = os.path.join(
-            self.path,
-            self.link.split('/')[-1]
-        )
-        if (os.path.isfile(local_filename)):
-            print('File % exist' % (local_filename))
+        local_filename = os.path.join(self.path, self.link.split('/')[-1])
+        if os.path.isfile(local_filename):
+            print('File {} exist'.format(local_filename))
+            return local_filename
         with requests.get(self.link, stream=True) as r:
             r.raise_for_status()
             with open(local_filename, 'wb') as f:
@@ -65,18 +65,10 @@ if __name__ == "__main__":
     parser_download.set_defaults(run=lambda worker: worker.download())
 
     for name, subp in subparsers.choices.items():
-        subp.add_argument('-c', '--config',
-                          default=None,
-                          help='Config file')
+        subp.add_argument('-c', '--config', default=None, help='Config file')
 
     args = parser.parse_args()
 
     config = load_cofig()
     for name, v in config['data'].items():
-        args.run(
-            DataWorker(
-                v['link'],
-                DataTypes[v['type']],
-                v['out-path']
-            )
-        )
+        args.run(DataWorker(v['link'], DataTypes[v['type']], v['out-path']))
