@@ -71,4 +71,5 @@ if __name__ == "__main__":
 
     config = load_cofig()
     for name, v in config['data'].items():
+        print('Downloading {}...'.format(name))
         args.run(DataWorker(v['link'], DataTypes[v['type']], v['out-path']))

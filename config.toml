@@ -1,95 +1,96 @@
 [data]
-    [data.VCTK]
-    link = "http://datashare.is.ed.ac.uk/download/DS_10283_2651.zip"
-    type = "http"
-    out-path = "./data/raw/VCTK"
 
     [data.DEMAND_TMETRO]
-    link = "https://zenodo.org/record/1227121/files/TMETRO_48k.zip?download=1"
+    link = "https://zenodo.org/record/1227121/files/TMETRO_48k.zip"
     type = "http"
     out-path = "./data/raw/DEMAND"
 
     [data.DEMAND_TCAR]
-    link = "https://zenodo.org/record/1227121/files/TCAR_48k.zip?download=1"
+    link = "https://zenodo.org/record/1227121/files/TCAR_48k.zip"
     type = "http"
     out-path = "./data/raw/DEMAND"
 
     [data.DEMAND_TBUS]
-    link = "https://zenodo.org/record/1227121/files/TBUS_48k.zip?download=1"
+    link = "https://zenodo.org/record/1227121/files/TBUS_48k.zip"
     type = "http"
     out-path = "./data/raw/DEMAND"
 
     [data.DEMAND_STRAFFIC]
-    link = "https://zenodo.org/record/1227121/files/STRAFFIC_48k.zip?download=1"
+    link = "https://zenodo.org/record/1227121/files/STRAFFIC_48k.zip"
     type = "http"
     out-path = "./data/raw/DEMAND"
 
     [data.DEMAND_SPSQUARE]
-    link = "https://zenodo.org/record/1227121/files/SPSQUARE_48k.zip?download=1"
+    link = "https://zenodo.org/record/1227121/files/SPSQUARE_48k.zip"
     type = "http"
     out-path = "./data/raw/DEMAND"
 
     [data.DEMAND_SCAFE]
-    link = "https://zenodo.org/record/1227121/files/SCAFE_48k.zip?download=1"
+    link = "https://zenodo.org/record/1227121/files/SCAFE_48k.zip"
     type = "http"
     out-path = "./data/raw/DEMAND"
 
     [data.DEMAND_PSTATION]
-    link = "https://zenodo.org/record/1227121/files/PSTATION_48k.zip?download=1"
+    link = "https://zenodo.org/record/1227121/files/PSTATION_48k.zip"
     type = "http"
     out-path = "./data/raw/DEMAND"
 
     [data.DEMAND_PRESTO]
-    link = "https://zenodo.org/record/1227121/files/PRESTO_48k.zip?download=1"
+    link = "https://zenodo.org/record/1227121/files/PRESTO_48k.zip"
     type = "http"
     out-path = "./data/raw/DEMAND"
 
     [data.DEMAND_PCAFETER]
-    link = "https://zenodo.org/record/1227121/files/PCAFETER_48k.zip?download=1"
+    link = "https://zenodo.org/record/1227121/files/PCAFETER_48k.zip"
     type = "http"
     out-path = "./data/raw/DEMAND"
 
     [data.DEMAND_OOFFICE]
-    link = "https://zenodo.org/record/1227121/files/OOFFICE_48k.zip?download=1"
+    link = "https://zenodo.org/record/1227121/files/OOFFICE_48k.zip"
     type = "http"
     out-path = "./data/raw/DEMAND"
 
     [data.DEMAND_OMEETING]
-    link = "https://zenodo.org/record/1227121/files/OMEETING_48k.zip?download=1"
+    link = "https://zenodo.org/record/1227121/files/OMEETING_48k.zip"
     type = "http"
     out-path = "./data/raw/DEMAND"
 
     [data.DEMAND_OHALLWAY]
-    link = "https://zenodo.org/record/1227121/files/OHALLWAY_48k.zip?download=1"
+    link = "https://zenodo.org/record/1227121/files/OHALLWAY_48k.zip"
     type = "http"
     out-path = "./data/raw/DEMAND"
 
     [data.DEMAND_NRIVER]
-    link = "https://zenodo.org/record/1227121/files/NRIVER_48k.zip?download=1"
+    link = "https://zenodo.org/record/1227121/files/NRIVER_48k.zip"
     type = "http"
     out-path = "./data/raw/DEMAND"
 
     [data.DEMAND_NPARK]
-    link = "https://zenodo.org/record/1227121/files/NPARK_48k.zip?download=1"
+    link = "https://zenodo.org/record/1227121/files/NPARK_48k.zip"
     type = "http"
     out-path = "./data/raw/DEMAND"
 
     [data.DEMAND_NFIELD]
-    link = "https://zenodo.org/record/1227121/files/NFIELD_48k.zip?download=1"
+    link = "https://zenodo.org/record/1227121/files/NFIELD_48k.zip"
     type = "http"
     out-path = "./data/raw/DEMAND"
 
     [data.DEMAND_DWASHING]
-    link = "https://zenodo.org/record/1227121/files/DWASHING_48k.zip?download=1"
+    link = "https://zenodo.org/record/1227121/files/DWASHING_48k.zip"
     type = "http"
     out-path = "./data/raw/DEMAND"
 
     [data.DEMAND_DLIVING]
-    link = "https://zenodo.org/record/1227121/files/DLIVING_48k.zip?download=1"
+    link = "https://zenodo.org/record/1227121/files/DLIVING_48k.zip"
     type = "http"
     out-path = "./data/raw/DEMAND"
 
     [data.DEMAND_DKITCHEN]
-    link = "https://zenodo.org/record/1227121/files/DKITCHEN_48k.zip?download=1"
+    link = "https://zenodo.org/record/1227121/files/DKITCHEN_48k.zip"
     type = "http"
     out-path = "./data/raw/DEMAND"
+
+    [data.VCTK]
+    link = "http://datashare.is.ed.ac.uk/download/DS_10283_2651.zip"
+    type = "http"
+    out-path = "./data/raw/VCTK"
