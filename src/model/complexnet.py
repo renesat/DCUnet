@@ -111,7 +111,7 @@ class ComplexBatchNorm2d(nn.Module):
         # V^(-1/2)
         # Based on: https://github.com/ChihebTrabelsi/deep_complex_networks/blob/master/complexnn/bn.py [complex_standardization]
         var_det = torch.sqrt(var_real_real * var_image_image -
-                             2 * var_real_image)
+                             var_real_image * var_real_image)
         t = torch.sqrt(var_real_real + var_image_image + 2 * var_real_image)
 
         inverse_det_t = 1.0 / (var_det * t)
@@ -148,9 +148,6 @@ class ComplexBatchNorm2d(nn.Module):
             result_x_image *
             self.gamma[:, 1, 1].reshape(1, self.num_features, 1, 1)
         )  # (B, F, W, H)
-
-        print(affine_result_x_real)
-        print(affine_result_x_image)
 
         affine_result_x = torch.stack(
             (affine_result_x_real, affine_result_x_image),
