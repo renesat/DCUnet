@@ -10,6 +10,7 @@ dependencies:
   - numpy
   - pandas
   - pep8
+  - mypy
   - pip
   - python=3.7.3
   - requests
