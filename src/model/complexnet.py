@@ -6,6 +6,27 @@ import torch
 import torch.nn as nn
 
 
+class ComplexConvTranspose2d(nn.Module):
+    def __init__(self, *args, **kwargs):
+        super(ComplexConvTranspose2d, self).__init__()
+
+        self.conv_real = nn.ConvTranspose2d(*args, **kwargs)
+        self.conv_image = nn.ConvTranspose2d(*args, **kwargs)
+
+    def forward(self, x):
+        """
+        x.shape = (B, F, W, H, 2)
+        """
+        conv0 = self.conv_real(x.unbind(4)[0])
+        conv1 = self.conv_image(x.unbind(4)[1])
+        real_part = (conv0 - conv1).unsqueeze(4)
+        image_part = (conv0 + conv1).unsqueeze(4)
+        return torch.cat((
+            real_part,
+            image_part,
+        ), dim=4)
+
+
 class ComplexConv2d(nn.Module):
     def __init__(self, *args, **kwargs):
         super(ComplexConv2d, self).__init__()
