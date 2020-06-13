@@ -15,7 +15,7 @@ class ComplexConv2d(nn.Module):
 
     def forward(self, x):
         """
-        x.shape = (batch_size, in_chanel, width, height, 2)
+        x.shape = (B, F, W, H, 2)
         """
         conv0 = self.conv_real(x.unbind(4)[0])
         conv1 = self.conv_image(x.unbind(4)[1])
@@ -39,7 +39,7 @@ class ComplexReLU(nn.Module):
 
     def forward(self, x):
         """
-        x.shape = (batch_size, in_chanel, width, height, 2)
+        x.shape = (B, F, W, H, 2)
         """
         return self.f(x)
 
