@@ -52,7 +52,7 @@ class DataWorker():
         return {
             'cleaned': self.__link_cleaner,
             'zip': self.__zip_cleaner,
-        }[self.type]()
+        }[self.file_type]()
 
     def __link_cleaner(self):
         in_dir = os.path.join(self.raw_path, self.path)
