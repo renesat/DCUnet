@@ -20,9 +20,11 @@ class DataWorker():
                  link,
                  dtype,
                  path,
-                 file_type='clean',
+                 file_type=None,
                  raw_path='data/raw',
                  cleaned_path='data/cleaned'):
+        if file_type is None:
+            file_type = 'clean',
 
         self.link = link
         self.type = dtype
@@ -118,4 +120,6 @@ if __name__ == "__main__":
     config = load_cofig()
     for name, v in config['data'].items():
         print('Downloading {}...'.format(name))
-        args.run(DataWorker(v['link'], DataTypes[v['type']], v['out-path']))
+        args.run(
+            DataWorker(v['link'], DataTypes[v['type']], v['out-path'],
+                       v.get('file-type', None)))
