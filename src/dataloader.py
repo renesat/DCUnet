@@ -3,6 +3,7 @@
 import argparse
 import os
 import shutil
+import zipfile
 from enum import Enum
 
 import requests
@@ -15,15 +16,25 @@ class DataTypes(Enum):
 
 
 class DataWorker():
-    def __init__(self, link, dtype, path):
+    def __init__(self,
+                 link,
+                 dtype,
+                 path,
+                 file_type='clean',
+                 raw_path='data/raw',
+                 cleaned_path='data/cleaned'):
 
         self.link = link
         self.type = dtype
         self.path = path
+        self.file_type = file_type
+        self.raw_path = raw_path
+        self.cleaned_path = cleaned_path
 
     def clean(self):
-        for filename in os.listdir(self.path):
-            file_path = os.path.join(self.path, filename)
+        out_dir = os.path.join(self.raw_path, self.path)
+        for filename in os.listdir(out_dir):
+            file_path = os.path.join(out_dir, filename)
             try:
                 if os.path.isfile(file_path) or os.path.islink(file_path):
                     os.unlink(file_path)
@@ -37,9 +48,40 @@ class DataWorker():
             DataTypes.http: self.__download_http,
         }[self.type]()
 
+    def cleaned(self):
+        return {
+            'cleaned': self.__link_cleaner,
+            'zip': self.__zip_cleaner,
+        }[self.type]()
+
+    def __link_cleaner(self):
+        in_dir = os.path.join(self.raw_path, self.path)
+        in_filename = os.path.abspath(
+            os.path.join(in_dir,
+                         self.link.split('/')[-1]))
+
+        out_dir = os.path.join(self.cleaned_path, self.path)
+        out_filename = os.path.abspath(
+            os.path.join(out_dir,
+                         self.link.split('/')[-1]))
+
+        os.symlink(in_filename, out_filename)
+
+    def __zip_cleaner(self):
+        in_dir = os.path.join(self.raw_path, self.path)
+        in_filename = os.path.abspath(
+            os.path.join(in_dir,
+                         self.link.split('/')[-1]))
+        out_dir = os.path.join(self.cleaned_path, self.path)
+
+        with zipfile.ZipFile(in_filename, 'r') as zip_ref:
+            zip_ref.extractall(out_dir)
+
     def __download_http(self):
-        os.makedirs(self.path, exist_ok=True)
-        local_filename = os.path.join(self.path, self.link.split('/')[-1])
+        out_dir = os.path.join(self.raw_path, self.path)
+        os.makedirs(out_dir, exist_ok=True)
+
+        local_filename = os.path.join(out_dir, self.link.split('/')[-1])
         if os.path.isfile(local_filename):
             print('File {} exist'.format(local_filename))
             return local_filename
@@ -63,6 +105,10 @@ if __name__ == "__main__":
 
     parser_download = subparsers.add_parser('download')
     parser_download.set_defaults(run=lambda worker: worker.download())
+    parser_download.add_argument('--clean', default=None, help='Config file')
+
+    parser_clean = subparsers.add_parser('cleaned')
+    parser_clean.set_defaults(run=lambda worker: worker.cleaned())
 
     for name, subp in subparsers.choices.items():
         subp.add_argument('-c', '--config', default=None, help='Config file')
