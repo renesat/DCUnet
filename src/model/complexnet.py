@@ -123,7 +123,7 @@ class ComplexBatchNorm2d(nn.Module):
                     var_real_image.data,
                     var_real_image.data,
                     var_image_image.data,
-                )).T.view(self.num_features, 2, 2)
+                )).transpose(0, 1).view(self.num_features, 2, 2)
         else:
             var_real_real = self.running_var[:, 0, 0]
             var_image_image = self.running_var[:, 1, 1]
