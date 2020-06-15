@@ -22,7 +22,7 @@ class SpeechWithNoiseDataset(Dataset):
         self.noise_by_speech = noise_by_speech
         self.snr = snr
 
-        self.speech_params = np.arrray(self.get_speech_params())
+        self.speech_params = np.array(self.get_speech_params())
 
     def __len__(self):
         return (len(self.speech_files) * len(self.speech_params) //
