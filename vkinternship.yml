@@ -2,7 +2,9 @@ name: vkinternship
 channels:
   - defaults
   - pytorch
+  - conda-forge
 dependencies:
+  - sox
   - ipykernel
   - ipython
   - jupyter
@@ -17,6 +19,8 @@ dependencies:
   - seaborn
   - statsmodels
   - pytorch
+  - torchaudio==0.3.1
   - torchvision
   - cpuonly
   - toml
+  - tqdm

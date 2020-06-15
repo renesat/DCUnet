@@ -108,6 +108,12 @@
     out-path = "DEMAND"
     file-type = "zip"
 
+    [data.LIBRISPEECH]
+    link = "http://www.openslr.org/resources/12/train-clean-100.tar.gz"
+    type = "http"
+    out-path = "LIBRISPEECH"
+    file-type = "tar"
+
     [data.VCTK]
     link = "http://datashare.is.ed.ac.uk/download/DS_10283_2651.zip"
     type = "http"
