@@ -38,7 +38,7 @@ class SpeechWithNoiseDataset(Dataset):
             range(speech_batch_index,
                   (speech_batch_index + self.speech_batch_size)))
 
-        item = []
+        item = None
         for (noises_indexes, snr) in self.speech_params[params_range]:
             all_noise = None
             for noise_index in noises_indexes:
@@ -50,10 +50,21 @@ class SpeechWithNoiseDataset(Dataset):
             speech_data_with_noise, _ = self.__add_noise(
                 speech_data, all_noise, snr)
 
-            item.append([
-                speech_data_with_noise,
-                speech_data,
-            ])
+            if item is None:
+                item = [
+                    speech_data_with_noise.unsqueeze(0),
+                    speech_data.unsqueeze(0)
+                ]
+            else:
+                item = [
+                    torch.cat((
+                        prev,
+                        new.unsqueeze(0),
+                    ), dim=0) for prev, new in zip(
+                        item,
+                        [speech_data_with_noise, speech_data],
+                    )
+                ]
         return item
 
     def get_speech_params(self):
