@@ -123,6 +123,15 @@ class DCUnet(nn.Module):
             seq = nn.Sequential(conv, f)
         return seq
 
+    def __interpolate(self, x, width, height):
+        def _interpolate(item):
+            return F.interpolate(item, size=(width, height))
+
+        if self.iscomplex:
+            return torch.stack(map(_interpolate, x.unbind(4)), dim=4)
+        else:
+            return _interpolate(x)
+
     def forward(self, x):
         """
         x.shape = (B, F, W, H, 2) if iscomlex else  (B, F, W, H)
@@ -134,29 +143,12 @@ class DCUnet(nn.Module):
             if is_have_connect:
                 prev_connect_index = len(self.layers) - i - 1
                 connect_x = outs[prev_connect_index]
-                if self.iscomplex:
-                    prev_x = torch.stack((
-                        F.interpolate(x.unbind(4)[0],
-                                      size=connect_x.shape[2:4]),
-                        F.interpolate(x.unbind(4)[1],
-                                      size=connect_x.shape[2:4]),
-                    ),
-                                         dim=4)
-                else:
-                    prev_x = F.interpolate(x, size=connect_x.shape[2:4])
+                prev_x = self.__interpolate(x, *(connect_x.shape[2:4]))
                 x = torch.cat((connect_x, prev_x), dim=1)
 
             x = layer(x)
             if not is_have_connect:
                 outs.append(x.data)
 
-        if self.iscomplex:
-            x = torch.stack((
-                F.interpolate(x.unbind(4)[0], size=input_size),
-                F.interpolate(x.unbind(4)[1], size=input_size),
-            ),
-                            dim=4)
-        else:
-            x = F.interpolate(x, size=input_size)
-
+        x = self.__interpolate(x, *(input_size))
         return x
