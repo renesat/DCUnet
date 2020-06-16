@@ -1,7 +1,7 @@
 import torch
 
 
-def bdt_loss(pred_y_batch,
+def spc_loss(pred_y_batch,
              y_with_noise_batch,
              y_batch,
              noise_batch,
