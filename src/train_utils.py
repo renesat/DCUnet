@@ -115,4 +115,4 @@ class SpeechWithNoiseDataset(Dataset):
             sr, out_sr, resampling_method='sinc_interpolation')
         data = transform(data).unbind(0)[0]
         data /= max(abs(data.min()), abs(data.max()), 1e-12)
-        return transform(data).unbind(0)[0]
+        return data
