@@ -31,97 +31,82 @@ class DCUnet(nn.Module):
 
             if i != len(layers_params) - 1:
                 batch_norm = True
+                activation = True
             else:
                 batch_norm = False
+                activation = False
 
             if not is_decoder:
                 if self.iscomplex:
-                    layer = self.__create_complex_conv_layer(
-                        in_chanels, layer_params, batch_norm=batch_norm)
+                    layer_type = "complex_encoder"
                 else:
-                    layer = self.__create_conv_layer(in_chanels,
-                                                     layer_params,
-                                                     batch_norm=batch_norm)
+                    layer_type = "encoder"
             else:
                 if self.iscomplex:
-                    layer = self.__create_complex_deconv_layer(
-                        in_chanels, layer_params, batch_norm=batch_norm)
+                    layer_type = "complex_decoder"
                 else:
-                    layer = self.__create_deconv_layer(in_chanels,
-                                                       layer_params,
-                                                       batch_norm=batch_norm)
+                    layer_type = "decoder"
+
+            layer = self.__create_block(
+                layer_type,
+                in_chanels,
+                layer_params['chanels'],
+                layer_params['kernel'],
+                layer_params['stride'],
+                batch_norm=batch_norm,
+                activation=activation,
+            )
             self.layers.append(layer)
         self.layers = nn.ModuleList(self.layers)
 
     @staticmethod
-    def __create_conv_layer(in_chanels: int, params, batch_norm: bool = True):
-        conv = nn.Conv2d(
+    def __create_block(block_type,
+                       in_chanels: int,
+                       out_chanels: int,
+                       kernel,
+                       stride,
+                       batch_norm: bool = True,
+                       activation: bool = True):
+        convType, bnType, fType = {
+            "encoder": (
+                nn.Conv2d,
+                nn.BatchNorm2d,
+                nn.ReLU,
+            ),
+            "decoder": (
+                nn.ConvTranspose2d,
+                nn.BatchNorm2d,
+                nn.ReLU,
+            ),
+            "complex_encoder": (
+                ComplexConv2d,
+                ComplexBatchNorm2d,
+                ComplexReLU,
+            ),
+            "complex_decoder": (
+                ComplexConvTranspose2d,
+                ComplexBatchNorm2d,
+                ComplexReLU,
+            ),
+        }[block_type]
+        layers = []
+        conv = convType(
             in_chanels,
-            params['chanels'],
-            params['kernel'],
-            stride=params['stride'],
+            out_chanels,
+            kernel,
+            stride=stride,
         )
-        f = nn.ReLU()
-        if batch_norm:
-            bn = nn.BatchNorm2d(params['chanels'])
-            seq = nn.Sequential(conv, bn, f)
-        else:
-            seq = nn.Sequential(conv, f)
-        return seq
+        layers.append(conv)
 
-    @staticmethod
-    def __create_deconv_layer(in_chanels: int,
-                              params,
-                              batch_norm: bool = True):
-        conv = nn.ConvTranspose2d(
-            in_chanels,
-            params['chanels'],
-            params['kernel'],
-            stride=params['stride'],
-        )
-        f = nn.ReLU()
         if batch_norm:
-            bn = nn.BatchNorm2d(params['chanels'])
-            seq = nn.Sequential(conv, bn, f)
-        else:
-            seq = nn.Sequential(conv, f)
-        return seq
+            bn = bnType(out_chanels)
+            layers.append(bn)
 
-    @staticmethod
-    def __create_complex_conv_layer(in_chanels: int,
-                                    params,
-                                    batch_norm: bool = True):
-        conv = ComplexConv2d(
-            in_chanels,
-            params['chanels'],
-            params['kernel'],
-            stride=params['stride'],
-        )
-        f = ComplexReLU()
-        if batch_norm:
-            bn = ComplexBatchNorm2d(params['chanels'])
-            seq = nn.Sequential(conv, bn, f)
-        else:
-            seq = nn.Sequential(conv, f)
-        return seq
+        if activation:
+            f = fType()
+            layers.append(f)
 
-    @staticmethod
-    def __create_complex_deconv_layer(in_chanels: int,
-                                      params,
-                                      batch_norm: bool = True):
-        conv = ComplexConvTranspose2d(
-            in_chanels,
-            params['chanels'],
-            params['kernel'],
-            stride=params['stride'],
-        )
-        f = ComplexReLU()
-        if batch_norm:
-            bn = ComplexBatchNorm2d(params['chanels'])
-            seq = nn.Sequential(conv, bn, f)
-        else:
-            seq = nn.Sequential(conv, f)
-        return seq
+        return nn.Sequential(*layers)
 
     def __interpolate(self, x, width, height):
         def _interpolate(item):
