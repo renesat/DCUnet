@@ -110,7 +110,7 @@ class SpeechWithNoiseDataset(Dataset):
         return speech + scale_factor * noise, noise
 
     def __load_file(self, path, out_sr=16000):
-        data, sr = torchaudio.load(path, normalized=True)
+        data, sr = torchaudio.load(path, normalization=True)
         transform = torchaudio.transforms.Resample(
             sr, out_sr, resampling_method='sinc_interpolation')
         data = transform(data).unbind(0)[0]
