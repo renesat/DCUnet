@@ -113,7 +113,7 @@ class DCUnet(nn.Module):
             return F.interpolate(item, size=(width, height))
 
         if self.iscomplex:
-            return torch.stack(map(_interpolate, x.unbind(4)), dim=4)
+            return torch.stack(tuple(_interpolate, x.unbind(4)), dim=4)
         else:
             return _interpolate(x)
 
