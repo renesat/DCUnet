@@ -1,11 +1,11 @@
 import torch
 
 
-def spc_loss(pred_y_batch,
-             y_with_noise_batch,
-             y_batch,
-             noise_batch,
-             reduction='sum'):
+def wsdr_loss(pred_y_batch,
+              y_with_noise_batch,
+              y_batch,
+              noise_batch,
+              reduction='sum'):
     data = zip(*[
         x.unbind(0) for x in [
             pred_y_batch,
@@ -18,6 +18,11 @@ def spc_loss(pred_y_batch,
     for (pred_y, y_with_noise, y, noise) in data:
 
         pred_noise = y_with_noise - pred_y
+        pred_noise /= max(
+            abs(pred_noise.min()),
+            abs(pred_noise.max()),
+            1e-12,
+        )
 
         y_norm = torch.norm(y, 2)
         noise_norm = torch.norm(noise, 2)
