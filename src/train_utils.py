@@ -54,8 +54,8 @@ class SpeechWithNoiseDataset(Dataset):
                 speech_data, all_noise, snr)
 
             noise_data /= max(
-                abs(noise_data.min()),
-                abs(noise_data.max()),
+                abs(speech_data_with_noise.min()),
+                abs(speech_data_with_noise.max()),
                 1e-12,
             )
             speech_data_with_noise /= max(
@@ -63,12 +63,12 @@ class SpeechWithNoiseDataset(Dataset):
                 abs(speech_data_with_noise.max()),
                 1e-12,
             )
+            speech = speech_data_with_noise - noise_data
 
             if item is None:
                 item = [
                     speech_data_with_noise.unsqueeze(0),
-                    speech_data.unsqueeze(0),
-                    noise_data.unsqueeze(0),
+                    speech.unsqueeze(0),
                 ]
             else:
                 item = [
@@ -79,8 +79,7 @@ class SpeechWithNoiseDataset(Dataset):
                         item,
                         [
                             speech_data_with_noise,
-                            speech_data,
-                            noise_data,
+                            speech,
                         ],
                     )
                 ]
