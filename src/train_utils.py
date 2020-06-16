@@ -25,8 +25,11 @@ class SpeechWithNoiseDataset(Dataset):
         self.speech_params = np.array(self.get_speech_params())
 
     def __len__(self):
-        return (len(self.speech_files) * len(self.speech_params) //
-                self.speech_batch_size)
+        if self.max_len is None:
+            return (len(self.speech_files) * len(self.speech_params) //
+                    self.speech_batch_size)
+        else:
+            return self.max_len
 
     def __getitem__(self, idx):
         real_index = idx // len(self.speech_params)
