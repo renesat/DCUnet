@@ -50,17 +50,25 @@ class SpeechWithNoiseDataset(Dataset):
                     all_noise = noise_data
                 else:
                     all_noise, _ = self.__add_noise(all_noise, noise_data, snr)
-            speech_data_with_noise, _ = self.__add_noise(
+            speech_data_with_noise, noise_data = self.__add_noise(
                 speech_data, all_noise, snr)
 
-            speech_data_with_noise /= max(abs(speech_data_with_noise.min()),
-                                          abs(speech_data_with_noise.max()),
-                                          1e-12)
+            noise_data /= max(
+                abs(noise_data.min()),
+                abs(noise_data.max()),
+                1e-12,
+            )
+            speech_data_with_noise /= max(
+                abs(speech_data_with_noise.min()),
+                abs(speech_data_with_noise.max()),
+                1e-12,
+            )
 
             if item is None:
                 item = [
                     speech_data_with_noise.unsqueeze(0),
-                    speech_data.unsqueeze(0)
+                    speech_data.unsqueeze(0),
+                    noise_data.unsqueeze(0),
                 ]
             else:
                 item = [
@@ -69,7 +77,11 @@ class SpeechWithNoiseDataset(Dataset):
                         new.unsqueeze(0),
                     ), dim=0) for prev, new in zip(
                         item,
-                        [speech_data_with_noise, speech_data],
+                        [
+                            speech_data_with_noise,
+                            speech_data,
+                            noise_data,
+                        ],
                     )
                 ]
         return item
@@ -107,7 +119,7 @@ class SpeechWithNoiseDataset(Dataset):
             noise_mse_amplitude = torch.sqrt(torch.mean(noise**2))
             scale_factor = speech_mse_amplitude / noise_mse_amplitude / 10**(
                 snr / 20)
-        return speech + scale_factor * noise, noise
+        return speech + scale_factor * noise, scale_factor * noise
 
     def __load_file(self, path, out_sr=16000):
         data, sr = torchaudio.load(path, normalization=True)
