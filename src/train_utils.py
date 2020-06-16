@@ -53,6 +53,10 @@ class SpeechWithNoiseDataset(Dataset):
             speech_data_with_noise, _ = self.__add_noise(
                 speech_data, all_noise, snr)
 
+            speech_data_with_noise /= max(abs(speech_data_with_noise.min()),
+                                          abs(speech_data_with_noise.max()),
+                                          1e-12)
+
             if item is None:
                 item = [
                     speech_data_with_noise.unsqueeze(0),
@@ -106,7 +110,9 @@ class SpeechWithNoiseDataset(Dataset):
         return speech + scale_factor * noise, noise
 
     def __load_file(self, path, out_sr=16000):
-        data, sr = torchaudio.load(path)
+        data, sr = torchaudio.load(path, normalized=True)
         transform = torchaudio.transforms.Resample(
             sr, out_sr, resampling_method='sinc_interpolation')
+        data = transform(data).unbind(0)[0]
+        data /= max(abs(data.min()), abs(data.max()), 1e-12)
         return transform(data).unbind(0)[0]

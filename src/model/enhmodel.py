@@ -19,7 +19,11 @@ class EnhModel(nn.Module):
                             window=self.window)  # (B, W, H, 2)
         x_conv = self.conv(x_stft.unsqueeze(1)).unbind(1)[0]  # (B, W, H, 2)
         x_crm = self.cRM(x_conv, x_stft)
-        x_istft = istft(x_crm, self.n_fft, self.hop_len, window=self.window)
+        x_istft = istft(x_crm,
+                        self.n_fft,
+                        self.hop_len,
+                        window=self.window,
+                        normalized=True)
         return x_istft
 
     def cRM(self, out_x, in_x):
