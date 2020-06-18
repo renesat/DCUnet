@@ -11,7 +11,9 @@ class ComplexConvTranspose2d(nn.Module):
         super(ComplexConvTranspose2d, self).__init__()
 
         self.conv_real = nn.ConvTranspose2d(*args, **kwargs)
+        nn.init.xavier_uniform_(self.conv_real.weight)
         self.conv_image = nn.ConvTranspose2d(*args, **kwargs)
+        nn.init.xavier_uniform_(self.conv_image.weight)
 
     def forward(self, x):
         """
@@ -32,7 +34,9 @@ class ComplexConv2d(nn.Module):
         super(ComplexConv2d, self).__init__()
 
         self.conv_real = nn.Conv2d(*args, **kwargs)
+        nn.init.xavier_uniform_(self.conv_real.weight)
         self.conv_image = nn.Conv2d(*args, **kwargs)
+        nn.init.xavier_uniform_(self.conv_image.weight)
 
     def forward(self, x):
         """
