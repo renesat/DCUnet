@@ -16,11 +16,10 @@ dependencies:
   - pip
   - python=3.7.3
   - requests
-  - seaborn
-  - statsmodels
-  - pytorch
-  - torchaudio==0.3.1
-  - torchvision
-  - cpuonly
+  - pytorch::pytorch
+  - pytorch::torchaudio==0.3.1
+  - pytorch::torchvision
+  - cudatoolkit==9.2
+  - tensorboard
   - toml
   - tqdm
