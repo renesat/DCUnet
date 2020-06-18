@@ -1,41 +1,28 @@
 import torch
 
 
-def wsdr_loss(pred_y_batch, y_with_noise_batch, y_batch, reduction='sum'):
-    data = zip(
-        *[x.unbind(0) for x in [
-            pred_y_batch,
-            y_with_noise_batch,
-            y_batch,
-        ]])
-    result = 0
-    for (pred_y, y_with_noise, y) in data:
+def wsdr_loss(pred_y, y_with_noise, y, reduction='mean', eps=1e-8):
+    pred_noise = y_with_noise - pred_y
+    noise = y_with_noise - y
 
-        pred_noise = y_with_noise - pred_y
-        noise = y_with_noise - y
+    y_norm = y.norm(2, dim=1)
+    noise_norm = noise.norm(2, dim=1)
+    pred_y_norm = pred_y.norm(2, dim=1)
+    pred_noise_norm = pred_noise.norm(2, dim=1)
 
-        y_norm = torch.norm(y, 2)
-        noise_norm = torch.norm(noise, 2)
-        pred_y_norm = torch.norm(pred_y, 2)
-        pred_noise_norm = torch.norm(pred_noise, 2)
+    prod_y = torch.sum(pred_y * y, dim=1)
+    sdr_y_loss = -prod_y / (y_norm * pred_y_norm + eps)
 
-        prod_y = torch.sqrt(torch.sum((pred_y - y)**2))
-        sdr_y_loss = prod_y / y_norm / pred_y_norm
+    prod_noise = torch.sum(pred_noise * noise, dim=1)
+    sdr_noise_loss = -prod_noise / (noise_norm * pred_noise_norm + eps)
 
-        prod_noise = torch.sqrt(torch.sum((pred_noise - noise)**2))
-        sdr_noise_loss = prod_noise / noise_norm / pred_noise_norm
+    alpha = y_norm**2 / (noise_norm**2 + y_norm**2 + eps)
 
-        alpha = y_norm**2 / (noise_norm**2 + y_norm**2)
-
-        loss = alpha * sdr_y_loss + (1 - alpha) * sdr_noise_loss
-
-        result += loss
+    loss = alpha * sdr_y_loss + (1 - alpha) * sdr_noise_loss
 
     if reduction == 'mean':
-        result = result / y_batch.shape[0]
+        return torch.mean(loss)
     elif reduction == 'sum':
-        pass
+        return torch.sum(loss)
     else:
         raise ValueError
-
-    return result
