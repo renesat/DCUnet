@@ -142,7 +142,7 @@ class ComplexBatchNorm2d(nn.Module):
                              var_real_image * var_real_image)
         t = torch.sqrt(var_real_real + var_image_image + 2 * var_real_image)
 
-        inverse_det_t = 1.0 / (var_det * t)
+        inverse_det_t = 1.0 / (var_det * t + self.eps)
 
         var_inv_sqrt_real_real = (var_image_image + var_det) * inverse_det_t
         var_inv_sqrt_real_real = var_inv_sqrt_real_real.reshape(
