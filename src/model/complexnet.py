@@ -99,9 +99,9 @@ class ComplexBatchNorm2d(nn.Module):
 
             with torch.no_grad():
                 self.running_mean *= (1 - self.momentum)
-                self.running_mean += self.momentum * mean_complex.data
+                self.running_mean += self.momentum * mean_complex.data.cpu()
         else:
-            mean_complex = self.running_mean
+            mean_complex = self.running_mean.to(x.device)
 
         # Centered data
         centered_x = x - mean_complex.reshape(1, self.num_features, 1, 1, 2)
@@ -119,15 +119,15 @@ class ComplexBatchNorm2d(nn.Module):
             with torch.no_grad():
                 self.running_var *= (1 - self.momentum)
                 self.running_var += self.momentum * torch.stack((
-                    var_real_real.data,
-                    var_real_image.data,
-                    var_real_image.data,
-                    var_image_image.data,
+                    var_real_real.data.cpu(),
+                    var_real_image.data.cpu(),
+                    var_real_image.data.cpu(),
+                    var_image_image.data.cpu(),
                 )).transpose(0, 1).view(self.num_features, 2, 2)
         else:
-            var_real_real = self.running_var[:, 0, 0]
-            var_image_image = self.running_var[:, 1, 1]
-            var_real_image = self.running_var[:, 1, 0]
+            var_real_real = self.running_var[:, 0, 0].to(x.device)
+            var_image_image = self.running_var[:, 1, 1].to(x.device)
+            var_real_image = self.running_var[:, 1, 0].to(x.device)
 
         # V^(-1/2)
         # Based on: https://github.com/ChihebTrabelsi/deep_complex_networks/blob/master/complexnn/bn.py [complex_standardization]
