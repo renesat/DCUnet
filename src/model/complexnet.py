@@ -19,10 +19,12 @@ class ComplexConvTranspose2d(nn.Module):
         """
         x.shape = (B, F, W, H, 2)
         """
-        conv0 = self.conv_real(x.unbind(4)[0])
-        conv1 = self.conv_image(x.unbind(4)[1])
-        real_part = (conv0 - conv1).unsqueeze(4)
-        image_part = (conv0 + conv1).unsqueeze(4)
+        convAx = self.conv_real(x.unbind(4)[0])
+        convAy = self.conv_real(x.unbind(4)[1])
+        convBx = self.conv_image(x.unbind(4)[0])
+        convBy = self.conv_image(x.unbind(4)[1])
+        real_part = (convAx - convBy).unsqueeze(4)
+        image_part = (convBx + convAy).unsqueeze(4)
         return torch.cat((
             real_part,
             image_part,
@@ -42,10 +44,12 @@ class ComplexConv2d(nn.Module):
         """
         x.shape = (B, F, W, H, 2)
         """
-        conv0 = self.conv_real(x.unbind(4)[0])
-        conv1 = self.conv_image(x.unbind(4)[1])
-        real_part = (conv0 - conv1).unsqueeze(4)
-        image_part = (conv0 + conv1).unsqueeze(4)
+        convAx = self.conv_real(x.unbind(4)[0])
+        convAy = self.conv_real(x.unbind(4)[1])
+        convBx = self.conv_image(x.unbind(4)[0])
+        convBy = self.conv_image(x.unbind(4)[1])
+        real_part = (convAx - convBy).unsqueeze(4)
+        image_part = (convBx + convAy).unsqueeze(4)
         return torch.cat((
             real_part,
             image_part,
