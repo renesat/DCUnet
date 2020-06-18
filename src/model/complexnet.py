@@ -77,12 +77,15 @@ class ComplexBatchNorm2d(nn.Module):
         self.momentum = momentum
         self.eps = eps
 
-        self.beta = nn.Parameter(torch.zeros(num_features, 2))
-        self.gamma = nn.Parameter(torch.empty(num_features, 2, 2))
+        self.beta = torch.zeros(num_features, 2, requires_grad=True)
+        self.gamma = torch.empty(num_features, 2, 2, requires_grad=True)
         self.gamma[:, 0, 0].fill_(1 / np.sqrt(2))
         self.gamma[:, 1, 1].fill_(1 / np.sqrt(2))
         self.gamma[:, 1, 0].zero_()
         self.gamma[:, 0, 1].zero_()
+
+        self.gamma = nn.Parameter(self.gamma)
+        self.beta = nn.Parameter(self.beta)
 
         self.running_mean = torch.zeros(num_features, 2)
         self.running_var = torch.empty(num_features, 2, 2)
