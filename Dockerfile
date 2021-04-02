@@ -31,11 +31,11 @@ RUN apt-get -qq update \
     && apt-get -qq -y install ${APT_PACKAGES}
 
 WORKDIR /workdir
-COPY ./vkinternship.yml /workdir/
+COPY ./dcunet.yml /workdir/
 
 # Packages
-RUN conda env create -f vkinternship.yml
-RUN conda activate vkinternship
+RUN conda env create -f dcunet.yml
+RUN conda activate dcunet
 RUN pip install pypesq
 
 RUN apt-get -qq -y remove ${APT_PACKAGES} \

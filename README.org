@@ -1,15 +1,13 @@
-#+TITLE: VKInternship DCUnet
+#+TITLE: DCUnet
 
-Тестовое задание на стажировку в VK.
-
-Была разобрана статья Choi Hyeong-Seok и др. "Phase-Aware Speech Enhancement with Deep Complex U-Net".
+Была разобрана c сеть по статье Choi Hyeong-Seok и др. "Phase-Aware Speech Enhancement with Deep Complex U-Net".
 
 * Начало работы
 
 Установка зависимостей (conda):
 #+BEGIN_SRC bash
-conda env create -f vkinternship.yml
-conda activate vkinternship
+conda env create -f dcunet.yml
+conda activate dcunet
 #+END_SRC
 
 Загрузка данных:
@@ -34,4 +32,4 @@ python3 -m src.dataloader clean-data
   - ~src/loss.py~ -- реализация wsdr loss функции
   - ~src/dataloader.py~ -- загрузчик данных для обучения
 - ~config.toml~ -- конфигурация проекта
-- ~vkinternship.yml~ -- conda envaroment config
+- ~dcunet.yml~ -- conda envaroment config

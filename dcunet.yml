@@ -1,4 +1,4 @@
-name: vkinternship
+name: dcunet
 channels:
   - defaults
   - pytorch

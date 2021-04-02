@@ -1,4 +1,4 @@
-NAME=vkinternship
+NAME=dcunet
 DOCKER_NAME=${NAME}
 DOCKER_MAIN_DIR=/workdir
 NEURO_DOCKER_NAME=image:${DOCKER_NAME}
